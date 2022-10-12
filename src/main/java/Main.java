@@ -1,7 +1,5 @@
 import io.magicthegathering.javasdk.api.CardAPI;
 import io.magicthegathering.javasdk.resource.Card;
-import org.apache.commons.text.similarity.LevenshteinDistance;
-
 import java.util.Scanner;
 import java.io.*;
 import java.util.List;
@@ -9,13 +7,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        //mainMenu();
-      try {
-          CardSearch.searchMenu();
-      }catch (Exception e){
-          System.out.println(e);
-      }
-
+       mainMenu();
+       // CardSearch.searchMenu();
         System.out.println("Closing");
     }
 
@@ -41,7 +34,7 @@ public class Main {
                 // see if the integer is an option
                 switch (choice) {
                     case 1:
-                        CardSearch.searchMenu();
+                        CardSearch.searchMenu(userInput);
                         break;
                     case 2:
                         updateList();
@@ -61,18 +54,23 @@ public class Main {
         } while (choice != 3);
         userInput.close();
 
+
     }
 
 
     public static void updateList() {
+        //Temp string to hold id
+        String tempId;
         //create list to store cards and get all cards from the API
         List<Card> cards = CardAPI.getAllCards();
         // Try to write the cards to a file
         try {
             FileWriter writer = new FileWriter("src/main/resources/card_List.txt");
-            //Write each card in the list
+            //Write each card in the list if the id isn't -1
             for (Card str : cards) {
-                writer.write(str + System.lineSeparator());
+                tempId=str.getId();
+                if(!(tempId.equals("-1")||tempId.equals(" -1"))){
+                writer.write(str + System.lineSeparator());}
             }
             writer.close();
         } catch (Exception ex) {
